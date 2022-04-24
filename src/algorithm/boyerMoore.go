@@ -1,14 +1,15 @@
-package main
+package algorithm
 
 import (
-	"fmt"
 	"io/ioutil"
 	"path/filepath"
 	"regexp"
+	"os"
 )
 
-func getDNASequenceFromFile(filename string) string{
-	absPath, _ := filepath.Abs("DeoxyriBoyer-Moore/test/" + filename)
+func GetDNASequenceFromFile(filename string) string{
+	mydir, _ := os.Getwd()
+	absPath, _ := filepath.Abs(filepath.Dir(filepath.Dir(mydir)) + "/test/" + filename)
 	b, err := ioutil.ReadFile(absPath)
 	var str = ""
 	if (err == nil){
@@ -19,7 +20,7 @@ func getDNASequenceFromFile(filename string) string{
 
 }	
 
-func isValidString(dna string) bool {
+func IsValidString(dna string) bool {
 	// Regex Parsing
 	match, err := regexp.MatchString(`^[ACGT]+$`, dna)
 	if err == nil {
@@ -29,14 +30,14 @@ func isValidString(dna string) bool {
 	}
 }
 
-func min(a, b int) int {
+func Min(a, b int) int {
 	if a < b {
 		return a
 	}
 	return b
 }
 
-func buildLast(disease string) [128]int {
+func BuildLast(disease string) [128]int {
 	// Mengembalikan sebuah array of integer berukuran 128 (Banyaknya karakter ASCII).
 	// Jika index ke-i bernilai -1, maka tidak ada karakter tersebut di pattern
 	// Jika tidak bernilai -1, maka nilai tersebut menunjukkan index terakhir karakter di pattern
@@ -50,7 +51,7 @@ func buildLast(disease string) [128]int {
 	return lastOccurence
 }
 
-func BoyerMoore(dna string, disease string) bool {
+func StartBoyerMoore(dna string, disease string) bool {
 	// Boyer-Moore Algorithm
 	// I.S. Input DNA valid (tidak ada huruf kecil, tidak ada huruf selain AGCT, tidak ada spasi)
 	// F.S. Boolean true or false
@@ -62,7 +63,7 @@ func BoyerMoore(dna string, disease string) bool {
 	var i int
 
 	// Simpan last occurence untuk masing-masing karakter pada disease
-	lastOccurence = buildLast(disease)
+	lastOccurence = BuildLast(disease)
 
 	dnaLength = len(dna)
 	diseaseLength = len(disease)
@@ -83,25 +84,9 @@ func BoyerMoore(dna string, disease string) bool {
 		} else {
 			var lo int
 			lo = lastOccurence[dna[i]]
-			i = i + diseaseLength - min(j, lo+1)
+			i = i + diseaseLength - Min(j, lo+1)
 			j = diseaseLength - 1
 		}
 	}
 	return false
-}
-
-func main() { // Buat testing 
-	// Asumsi sequence DNA pengguna > sequence penyakit
-	dnaToTest := getDNASequenceFromFile("dnaInput.txt")
-	disease := "GATC"
-	fmt.Println(dnaToTest)
-	if isValidString(dnaToTest) {
-		if !BoyerMoore(dnaToTest, disease) {
-			fmt.Println("Disease not detected!")
-		} else {
-			fmt.Println("Disease detected!")
-		}
-	} else {
-		fmt.Println("Invalid DNA!")
-	}
 }
