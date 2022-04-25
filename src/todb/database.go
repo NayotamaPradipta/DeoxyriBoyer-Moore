@@ -49,7 +49,7 @@ func insert(query string, password string) {
 	fmt.Println("Connected!")
 }
 
-func SELECT(query string, password string, table string) {
+func SELECT(query string, password string, table string) (hasilprediksi, jenispenyakit) {
 	// Capture connection properties.
 	// Get a database handle.
 	var err error
@@ -62,21 +62,21 @@ func SELECT(query string, password string, table string) {
 	if pingErr != nil {
 		log.Fatal(pingErr)
 	}
+	var p jenispenyakit
+	var pr hasilprediksi
 	if table == "jenispenyakit" {
-		var p jenispenyakit
 		err = db.QueryRow(query).Scan(&p.id_penyakit, &p.nama_penyakit, &p.rantai_dna)
 		if err != nil {
 			panic(err.Error())
 		}
 		fmt.Printf("id = %d, nama = %s, dna = %s\n", p.id_penyakit, p.nama_penyakit, p.rantai_dna)
-
 	} else if table == "hasilprediksi" {
-		var p hasilprediksi
-		err = db.QueryRow(query).Scan(&p.tanggal_prediksi, &p.nama_pasien, &p.penyakit_terprediksi, &p.status_terprediksi)
+		err = db.QueryRow(query).Scan(&pr.tanggal_prediksi, &pr.nama_pasien, &pr.penyakit_terprediksi, &pr.status_terprediksi)
 		if err != nil {
 			panic(err.Error())
 		}
-		fmt.Printf("tanggal = %s, nama = %s, penyakit = %s, status = %s\n", p.tanggal_prediksi, p.nama_pasien, p.penyakit_terprediksi, p.status_terprediksi)
+		fmt.Printf("tanggal = %s, nama = %s, penyakit = %s, status = %s\n", pr.tanggal_prediksi, pr.nama_pasien, pr.penyakit_terprediksi, pr.status_terprediksi)
 	}
 	fmt.Println("Connected!")
+	return pr, p
 }
