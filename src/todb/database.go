@@ -1,3 +1,4 @@
+/*
 package todb
 
 import (
@@ -14,12 +15,16 @@ import (
 var db *sql.DB
 
 type jenispenyakit struct {
-	id_penyakit               int
-	nama_penyakit, rantai_dna string
+	id_penyakit               int       `json:"id_penyakit"`
+	nama_penyakit             string    `json:"nama_penyakit"`
+	rantai_dna                string    `json:"rantai_dna"`
 }
 
 type hasilprediksi struct {
-	tanggal_prediksi, nama_pasien, penyakit_terprediksi, status_terprediksi string
+	tanggal_prediksi          string    `json:"tanggal_prediksi"`
+	nama_pasien               string    `json:"nama_pasien"`
+	penyakit_terprediksi      string    `json:"penyakit_terprediksi"`
+	status_terprediksi        string    `json:"status_terprediksi"`
 }
 
 func InsertNewDisease(diseaseName string, dna string, password string) { 
@@ -214,3 +219,4 @@ func SELECTRIWAYAT(input string, password string) []hasilprediksi{
 	} 
 	return nil
 }
+*/
