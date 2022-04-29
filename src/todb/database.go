@@ -93,22 +93,17 @@ func SELECTDNA(diseaseName string, password string) (string) {
 	var err error
 	db, err = sql.Open("mysql", "root:"+password+"@tcp(localhost:3306)/tesdna")
 	if err != nil {
+		fmt.Println("gotcha")
 		log.Fatal(err)
-	}
-
-	pingErr := db.Ping()
-	if pingErr != nil {
-		log.Fatal(pingErr)
 	}
 	var ddna string
 	query := fmt.Sprintf(`SELECT rantai_dna FROM tesdna.jenispenyakit WHERE nama_penyakit = "%s"`, diseaseName)
 	// if table == "jenispenyakit" {
 	err = db.QueryRow(query).Scan(&ddna)
-	if err.Error() == "sql: no rows in result set" {
-		// fmt.Println("Disease " + diseaseName + " is not in database")
+	if err != nil {
+		fmt.Println("gotcha")
 		ddna = ""
-	} else if err != nil {
-		panic(err.Error())
+		log.Fatal(err)
 	}
 	return ddna
 }

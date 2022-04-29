@@ -1,71 +1,20 @@
 package main
 
 import (
+	
 	"database/sql"
-	"fmt"
 	"log"
-	"net/http"
+	"net/http" 
+	"fmt"
 	"strconv"
 	"time"
-
+	// "github.com/NayotamaPradipta/DeoxyriBoyer-Moore/src/todb"
 	"github.com/NayotamaPradipta/DeoxyriBoyer-Moore/src/algorithm"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 )
 
 func main() {
-	/*
-		// Asumsi sequence DNA pengguna > sequence penyakit
-		dnaToTest := algorithm.GetDNASequenceFromFile("dnaInput.txt")
-		disease := "GATC"
-		fmt.Println(dnaToTest)
-		if algorithm.IsValidString(dnaToTest) {
-			if !algorithm.StartBoyerMoore(dnaToTest, disease) {
-				fmt.Println("Disease not detected with Boyer-Moore!")
-			} else {
-				fmt.Println("Disease detected with Boyer-Moore!")
-			}
-			if !algorithm.StartKMP(dnaToTest, disease) {
-				fmt.Println("Disease not detected with Boyer-Moore!")
-			} else {
-				fmt.Println("Disease detected with KMP!")
-			}
-		} else {
-			fmt.Println("Invalid DNA String!")
-		}
-		klinefelter := algorithm.GetDNASequenceFromFile("Klinefelter.txt")
-		if algorithm.IsValidString(klinefelter){
-			todb.InsertNewDisease("Klinefelter", klinefelter, "")
-		} else {
-			fmt.Println("Invalid Disease DNA!")
-		}
-		fmt.Println(todb.SELECTDNA("x", ""))
-		// Testing searching
-		if algorithm.IsValidSearchDiseaseOnly("testDisease") {
-			todb.SELECTDNA("testDisease", "")
-		}
-		if algorithm.IsValidSearchDateAndDisease("HIV 20 September 1999") {
-			fmt.Println("Valid!")
-		}
-		if algorithm.IsValidSearchDateOnly("11 April 2020"){
-			fmt.Println("Valid!")
-		}
-		if algorithm.IsValidSearchDateAndDisease("19 October 2020 Klinefelter"){
-			fmt.Println("Valid!")
-		}
-		if !algorithm.IsValidSearchDateAndDisease("32 December 2020 HIV"){
-			fmt.Println("Invalid!")
-		}
-		todb.SELECTRIWAYAT("32 December 2020 HIV", "")
-
-		todb.InsertNewPrediction("11 April 2020", "Kaori Miyazono", "Klinefelter", "False", "")
-		// Manual input buat testing backend
-		INSERT INTO hasilprediksi VALUES ("10 August 2020", "Ken Kaneki", "Ghoul", "True");
-		INSERT INTO hasilprediksi VALUES ("27 October 2021", "Chizuru Ichinose", "Kawaiism", "True");
-		INSERT INTO hasilprediksi VALUES ("27 October 2021", "Gabimaru", "Klinefelter", "False");
-		riwayat := todb.SELECTRIWAYAT("Klinefelter 11 April 2020", "")
-		fmt.Println(riwayat)
-	*/
 	db, err := sql.Open("mysql", "root:@tcp(localhost:3306)/tesdna")
 	err = db.Ping()
 	if err != nil {
@@ -288,4 +237,55 @@ func main() {
 		}
 	})
 	router.Run(":8080")
+	/*
+	// Main from terminal 
+	var input int
+	fmt.Println("Action: ")
+	fmt.Println("1. Add disease DNA to database: ")
+	fmt.Println("2. Check DNA for disease")
+	fmt.Scanln(&input)
+
+	if (input == 1) {
+		var fileName string
+		var diseaseName string
+		fmt.Println("Insert disease name: ")
+		fmt.Scanln(&diseaseName)
+		fmt.Println("Insert filename: ")
+		fmt.Scanln(&fileName)
+		diseaseDNA := algorithm.GetDNASequenceFromFile(fileName)
+		fmt.Println(diseaseName)
+		if algorithm.IsValidString(diseaseDNA) {
+			todb.InsertNewDisease(diseaseName, diseaseDNA, "")
+		} else {
+			fmt.Println("File mengandung invalid characters!")
+		}
+	} else {
+		var pasienName string 
+		var filename string
+		var disease string 
+		fmt.Println("Insert nama: ")
+		fmt.Scanln(&pasienName)
+		fmt.Println("Insert file DNA: ")
+		fmt.Scanln(&filename)
+		fmt.Println("Insert disease to check: ")
+		fmt.Scanln(&disease)
+		pasienDNA := algorithm.GetDNASequenceFromFile(filename)
+		fmt.Println("Success")
+		diseaseDNA := todb.SELECTDNA(disease, "")
+		fmt.Println("Success")
+		if algorithm.IsValidString(pasienDNA) && diseaseDNA != "" {
+			now := time.Now()
+			y, m, d := now.Date()
+			date := strconv.Itoa(d) + " " + m.String() + " " + strconv.Itoa(y)
+			if algorithm.StartBoyerMoore(pasienDNA, diseaseDNA) && algorithm.StartKMP(pasienDNA, diseaseDNA) {
+				todb.InsertNewPrediction(date, pasienName, disease, "True", "")
+			} else {
+				todb.InsertNewPrediction(date, pasienName, disease, "False", "")
+			}
+		} else {
+			fmt.Println("Invalid String input or No Disease in Database")
+		}
+		
+	}
+	*/
 }
