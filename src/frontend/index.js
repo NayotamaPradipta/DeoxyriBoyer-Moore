@@ -14,9 +14,8 @@ function searchURL() {
             input.value = input.value.substring(0, index); 
             window.location.href = "http:localhost:8080/dnd/" + penyakit + "/" + input.value.replace(/\s/g, '');
         } else {
-            var index = input.value.lastIndexOf(" ");
-            input.value = input.value.substring(0, index); 
-            window.location.href = "http:localhost:8080/dnd/" + input.value.split(" ").pop() + "/" + input.value.replace(/\s/g, '');
+            var arr = input.value.split(" ");
+            window.location.href = "http:localhost:8080/dnd/" + arr[0] + "/" + arr[1] + arr[2] + arr[3];
         }
         
     }
